@@ -1,0 +1,100 @@
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="title" content="reGoosinals egg0">
+  <meta name="description" content="Recursive Goose Ordinals 🦢 A vibrant mid effort 3D recursive ordinals project using geese">
+  <meta name="keywords" content="https://twitter.com/reGoosinals">
+  <meta name="author" content="https://twitter.com/benschiller_xyz" />
+  <title>reGoosinals egg0</title>
+  <style>
+    .navbar,
+    .open-nav {
+      position: absolute;
+      top: 5;
+      right: 5
+    }
+
+    .navbar,
+    button {
+      color: #fff;
+      border-radius: 5px;
+      font-family: monospace
+    }
+
+    body {
+      margin: 0
+    }
+
+    .navbar {
+      padding: 15px;
+      background-color: #320032;
+      width: clamp(100px, 200px, 250px);
+      display: none;
+      font-size: 10px;
+      opacity: .7
+    }
+
+    .open-nav {
+      display: flex;
+      padding: 4px 5px 10px 8px;
+      background-color: gray;
+      border-radius: 5px;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      z-index: 1000000;
+      font-size: 25px;
+      opacity: 0
+    }
+
+    .alink {
+      color: #fff
+    }
+
+    button {
+      background-color: purple;
+      bordeR: 0;
+      padding: 5px;
+      cursor: pointer !important;
+      margin-bottom: 5px;
+      width: 140px;
+      text-align: left;
+      font-size: 13px
+    }
+
+    input[type=range] {
+      accent-color: purple
+    }
+  </style>
+</head>
+
+<body>
+  <div id="scene"></div>
+  <script>
+    var urls = ['/blocktime', '/content/183616632d0baeeaf8bc7bbda1766ea1fb19e76f63fdf136456e075bf19ed08di0', '/content/2dbdf9ebbec6be793fd16ae9b797c7cf968ab2427166aaf390b90b71778266abi0', '/content/10665922de450d9b25c21d213ac7a2b7231e79a25be5865fd10ba0e19c4fac21i0', '/content/8681d04e680c9cfc1052ea694919ddcfbf9e87d0e9e9eb85bba7f0f1332ebb27i0']
+    if (window.location.href.includes('file://') || window.location.href.includes('localhost:3000')) {
+      for (var i = 0; i < urls.length; i++) {
+        urls[i] = 'https://ord-mirror.magiceden.dev' + urls[i]
+      }
+    } // i like the egg
+    td = 'H4sIAOipyWUCA7VX3XPTOBB/z1+h6UtkMGqSttAh9GZ6pXwN5TqUwkPpgGIricC2jCSnSZn+77crf8RyUri7mfNDYq92V/vx29VqWmSRlSoj02nCrTjhSTLh0fcRDcjPHiGRyowlsUxPVCzIUcXFjNUvtEovD2lFmBXZrcwvVllEM3FDLmVmD4+15ivqftkUuCm3akLjvSBgKc8pjeZcB+ToD4IvDH9wk2NLBwE+42Z7O9dCvDGVCZUxzOSJtLT/OesHVwfX417DrqK0duMi0jK3ILTTItJgvNNiB3sbtlhFRSoyyyItwK3TROAX7RvH0Hc2NfxMZpnQrz6cvQXJq5aR4aYJ1+ybkhndGX/OdpyWZqeJileM57nI4pO5TGLa6Ae+O24gpGRaJ8nzAhIEipq1RPG4FKSFTkIizZmKi8RljSdGlAklRAtb6AzdIOeQFWkEpVoYlSzAcC2+ici6rJTcdZTMvwkRPnJKaG1C0CgjlSJmVzla1k8dQ7+Wuut5XEZHwATujH26ytBbWKoM31gWWivt1tGfermxfS547AXd1BF3Rrh/NGXBNe5uQNONzGJ1w/CrRqZKBEvUjPaR2A8dZ4A54Tdc2k5CzNXwOqhUgrDVKjFrEJpIZBgPzMqHV+9PT9kFUmgTzpox4qnQ3OM8F9rk4KVcQPniKm1k8HlyEHrflSMOvJ9kbOdk16O9EnI2t77MgA19wnAwGDSEVqlqiKjQQnsGfhKTl2/fVyv0p6eIZ1byRHLzlFhdiGYNckB2d8lpxicA4ZQvZVqkjvuRY5fZrOGtN2VG2At5K+iGi+EWD1uhvb8YG9WxSiuo+ylxefS8/UtPpD2pVmiZr5BsV9RoAlffgYaZUKmwegWOxuC0FRqCQ6YAZTsXuMfpbNYBRA59xaIFV9drw1CCJgI6t5jB0mDsXp4dkeFh9f7wiDxul+VaoXaFRc+4nbPz1+QBsgeAERTdwu729wLwEbCo9MhHIT50wJ6MyENA0+AQ9LodImUo7BgENQEy6wjhhvgjT8BbLsGCMdoRsxkRPwqOPXHHYyojxfLCzKl7b2XyrhPVMtQv63S03XsLVoh6pVRkQvJ4v5POE9ceCSeTYjqFgsCUXH6EpOZ5G7vldsWim8GSvhDaykhUAGtZxLi1Wk4KK8AhZSR6yzgetS0rGhTIEgOSPGs0skRkMztH4v1QWAxB8OdGIpZPGzVX8nozUav2OuR7eO2x3G2D0WL0+61A1d4/2G5/YzvvG2JdYmATnw5gfGLoYsiWAVqOwB+FBAkr8ogMyu9fSY66kqO15LAD2l4Lf23sXOYxYgfx3HSEGwmduuoCCKQKVg0OGvkOUKAnHtc8cFIt4JxaY/kFnFF2b/Sn07VmgxCFZBS06uN+9BULlgkRm8rmI9fG/VK4mHPofet+BqSJyEwEHTYR+stydbu1+s5qfu9YdLrqpc5hUmQSMJ/CWbKJJCtTsY2Oz4InBSwONxbv/FR3PhF1Ylla9JR87a3V6RXUOKxHI7K4XIy3reyRxTuwlSetWC2UxLYPHbBdj6ABh6C2mlISA1OpqFdmyZfzqh3Aaq4Vjj/wAQHTcgk9FuYtkXyU4qahgC37tO4hIRmywda++DX0y2iq+QxPsU33qyyQKYLLxX38f4Wm7LQ8iQq8hZAEz3UCDRnQJe2KTLgRMYFQYN2YQk95JKqQtVSUdjrZ140oDrqWlrw4UlQWBaEzEE6yQUjqnyDwWgyYdBx/K4zdsMcqcOE7mAIxQ19TpUUdrpaCDVNSuaQ+EfeFwQ6yNTrY3D3PkxWc4zKbqBsoqURp4/qHKnBCS1yc8cbgm9drIxuS4ARhd+ewl3s8oyF50NgewCTIBtDvMM14hg/d14h1hs62xIEnMGAHbiT4rcA28V0U7G1vqS4UZ0Vi5ZZoTGDEcjkCfNwfBqimFwDzk3Ug9mkZlQekm49f1E1rpu1t73TCzL0uhwTq99yw0xVbm7nLA+NxTNfqutNIeW2oyxxJWrxU8JnB3ZDA0LQe58uRdT1W3IJpe7664ziubyLNXaZzT0lU9N3z6QQp7QsN6Kl4/TG6tPU/TNAXMOqkMquG5yWJpbE8g5LHQegX5joCA8nntQAMymw43sLDly2eg/asVV/DeSbxoKPbJypovhZvby48bCbscyS0o1JeaH4UwthjpwqUAghTQSvNHV4fFaw+AhkWCHMHGw54UKRPDsbt2QKW150a4sPrzfw2v5a4L4BegArHS4POzNXkrnyhDrFhpdIrm976YljFcdy76/0NmFP1HqYSAAA=';
+
+    function fflateCallback() {
+      newS = document.createElement('script');
+      newS.innerHTML = fflate.strFromU8(fflate.gunzipSync(new Uint8Array(Array.from(atob(td)).map((char) => char.charCodeAt(0))))) + ";fflateCallback2()";
+      document.body.appendChild(newS);
+    }
+    (async function() {
+      response = await fetch(urls[2]);
+      hl = await response.text();
+      hlL = hl.split("\n");
+      fflateS = hlL[28];
+      d3S = hlL[32];
+      ffCS = "fflateCallback();";
+      newS = document.createElement('script');
+      newS.innerHTML = [fflateS, d3S, ffCS].join(";\n");
+      document.body.appendChild(newS);
+    })();
+  </script>
