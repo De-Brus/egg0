@@ -1,0 +1,150 @@
+function fflateCallback2() {
+  const dimCode = fflate.strFromU8(fflate.gunzipSync(new Uint8Array(Array.from(atob(d3)).map((char) => char.charCodeAt(0)))));
+  const threeJsCode = dimCode.split('\n')[5];
+
+  const ocmCallbackScript = "ocmCallback();";
+
+  const newScript = document.createElement('script');
+  newScript.innerHTML = [threeJsCode, ocmCallbackScript].join(";\n");
+  document.body.appendChild(newScript);
+}async function ocmCallback() {
+
+  function loadScript(url, isModule = false) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      if (isModule) {
+        script.type = 'module';
+      }
+      script.src = url;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+  var urls = window.urls;
+  console.log('urls', urls)
+
+  await loadScript(urls[1])
+  var controls
+
+  const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+  const renderer = new THREE.WebGLRenderer({
+            antialias: true
+        }); // Enable maximum anti-aliasing
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // New geometry and material for the newEgg
+        const points = [];
+        for (let deg = 0; deg <= 180; deg += 6) {
+            const rad = (Math.PI * deg) / 180;
+            const point = new THREE.Vector2(
+                (0.72 + 0.08 * Math.cos(rad)) * Math.sin(rad),
+                -Math.cos(rad)
+            ); // the "egg equation"
+            points.push(point);
+        }
+        const newEggGeometry = new THREE.LatheGeometry(points, 64);
+
+        // Create a buffer for UV mapping
+        const uvs = [];
+        const vertices = newEggGeometry.attributes.position.array;
+
+        for (let i = 0; i < vertices.length; i += 6) {
+            const v1 = {
+                x: vertices[i],
+                y: vertices[i + 1]
+            };
+            const v2 = {
+                x: vertices[i + 3],
+                y: vertices[i + 4]
+            };
+
+            uvs.push(
+                (Math.abs(v1.x) + 1) / 2, (v1.y - 0) / 2,
+                (Math.abs(v2.x) + 1) / 2, (v2.y - 0) / 1
+            );
+
+        }
+
+        // Update the geometry with the new UV buffer attribute
+        newEggGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+        newEggGeometry.attributes.uv.needsUpdate = true;
+
+        // Shader material // benschiller_xyz
+        const newEggMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: {
+                    value: 1
+                },
+            },
+            vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vNormal;
+
+        void main() {
+        vUv = uv;
+        vNormal = normal;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+        `,
+
+            fragmentShader: `
+        uniform float time;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+
+        void main() {
+          // Calculate light intensity based on the surface normal
+          float lightIntensity = dot(normalize(vNormal), vec3(0.0, 0.0, 0.0));
+
+          // Adjust light intensity to make shading more uniform
+          lightIntensity = mix(lightIntensity, 0.75, 1.25);
+
+          // Apply rainbow colors without relying on light intensity
+          vec3 color = vec3(
+            sin(vUv.y * 10.0 + time) * 1.0 + 2.5,
+            sin(vUv.y * 5.0 + time) * 0.5 + 0.5,
+            sin(vUv.y * 5.0 + vUv.y * 5.0 + time) / 0.5
+          );
+
+          // Multiply rainbow colors by adjusted light intensity
+          gl_FragColor = vec4(color * lightIntensity, 1.0);
+        }
+        `,
+        });
+
+        const newEggMesh = new THREE.Mesh(newEggGeometry, newEggMaterial);
+        scene.add(newEggMesh);
+
+        // Camera position // reGoosinals egg0
+        camera.position.z = 3;
+
+        // Add camera controls
+        const clock = new THREE.Clock();
+        // const controls = new CameraControls(camera, renderer.domElement);
+
+        // Set min and max distance for camera controls
+        controls.minDistance = 1.1;
+        controls.maxDistance = 5;
+
+        function animate() {
+            const delta = clock.getDelta();
+            requestAnimationFrame(animate);
+            newEggMaterial.uniforms.time.value += 0.075; // Update time uniform for animation
+
+            // Update camera controls
+            controls.update();
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+}
